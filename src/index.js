@@ -97,7 +97,7 @@ const initAudio = () => {
 
     const audioLoader = new THREE.AudioLoader();
     // https://www.newgrounds.com/audio/listen/232941
-    audioLoader.load('asset/232941_New.MP3', (buffer) => {
+    audioLoader.load('asset/TidalHybrid.mp3', (buffer) => {
         document.body.classList.remove(classNameForLoading);
 
         audio.setBuffer(buffer);
