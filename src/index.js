@@ -5,6 +5,7 @@ window.THREE = require("three");
 
 let scene, renderer, camera, clock, width, height, video;
 let particles, videoWidth, videoHeight, imageCache;
+let counter = 0;
 
 const canvas = document.createElement("canvas");
 const ctx = canvas.getContext("2d");
@@ -185,6 +186,13 @@ const getFrequencyRangeValue = (data, _frequencyRange) => {
     return total / numFrequencies / 255;
 };
 
+let scroll_speed = 0.0;
+let threshold = 100;
+window.addEventListener('wheel', event => {
+    scroll_speed = event.deltaY * (Math.PI / 180) * 0.8;
+    threshold += -50.0 * scroll_speed;
+});
+
 const draw = (t) => {
     clock.getDelta();
     const time = clock.elapsedTime;
@@ -214,6 +222,12 @@ const draw = (t) => {
         const density = 2;
         const useCache = parseInt(t) % 2 === 0;  // To reduce CPU usage.
         const imageData = getImageData(video, useCache);
+        if (audio.isPlaying){
+          if (counter > 5000) {
+            threshold = Math.floor(Math.random() * 10000);
+          }
+          counter += 1;
+        }
         for (let i = 0, length = particles.geometry.vertices.length; i < length; i++) {
             const particle = particles.geometry.vertices[i];
             if (i % density !== 0) {
@@ -222,7 +236,6 @@ const draw = (t) => {
             }
             let index = i * 4;
             let gray = (imageData.data[index] + imageData.data[index + 1] + imageData.data[index + 2]) / 3;
-            let threshold = 300;
             if (gray < threshold) {
                 if (gray < threshold / 3) {
                     particle.z = gray * r * 5;
