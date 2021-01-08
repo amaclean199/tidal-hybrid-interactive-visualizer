@@ -191,8 +191,7 @@ const getFrequencyRangeValue = (data, _frequencyRange) => {
 
 // SCROLL WHEEL CONTROL
 window.addEventListener('wheel', event => {
-    let scroll_speed = 0.0;
-    scroll_speed = event.deltaY * (Math.PI / 180) * 0.8;
+    let scroll_speed = event.deltaY * (Math.PI / 180) * 0.8;
     threshold += -50.0 * scroll_speed;
 });
 
