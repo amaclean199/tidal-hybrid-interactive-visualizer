@@ -9,6 +9,6 @@ module.exports = {
         path: path.join(__dirname, ''),
     },
     devServer: {
-        contentBase: path.join(__dirname, 'public')
+        contentBase: path.join(__dirname, '')
     }
 };

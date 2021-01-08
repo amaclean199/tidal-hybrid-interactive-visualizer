@@ -5,7 +5,8 @@ window.THREE = require("three");
 
 let scene, renderer, camera, clock, width, height, video;
 let particles, videoWidth, videoHeight, imageCache;
-let counter = 0;
+let masterClock = 0;
+let threshold = 100;
 
 const canvas = document.createElement("canvas");
 const ctx = canvas.getContext("2d");
@@ -97,7 +98,6 @@ const initAudio = () => {
     audio = new THREE.Audio(audioListener);
 
     const audioLoader = new THREE.AudioLoader();
-    // https://www.newgrounds.com/audio/listen/232941
     audioLoader.load('asset/TidalHybrid.mp3', (buffer) => {
         document.body.classList.remove(classNameForLoading);
 
@@ -113,8 +113,11 @@ const initAudio = () => {
         if (audio) {
             if (audio.isPlaying) {
                 audio.pause();
+                masterClock += clock.getElapsedTime();
+                clock.stop();
             } else {
                 audio.play();
+                clock.start();
             }
         }
     });
@@ -186,17 +189,26 @@ const getFrequencyRangeValue = (data, _frequencyRange) => {
     return total / numFrequencies / 255;
 };
 
-let scroll_speed = 0.0;
-let threshold = 100;
+// SCROLL WHEEL CONTROL
 window.addEventListener('wheel', event => {
+    let scroll_speed = 0.0;
     scroll_speed = event.deltaY * (Math.PI / 180) * 0.8;
     threshold += -50.0 * scroll_speed;
 });
 
-const draw = (t) => {
-    clock.getDelta();
-    const time = clock.elapsedTime;
+const eventController = (time) => {
 
+    if (time > 14 && time < 20) {
+        threshold = Math.floor(Math.random() * 10000);
+    }
+    else if (time > 20 && time < 26) {
+        if (threshold > 1000) { threshold = 1000; }
+        threshold -= 4;
+    }
+};
+
+const draw = (t) => {
+    eventController(masterClock + clock.getElapsedTime());
     let r, g, b;
 
     // audio
@@ -222,12 +234,6 @@ const draw = (t) => {
         const density = 2;
         const useCache = parseInt(t) % 2 === 0;  // To reduce CPU usage.
         const imageData = getImageData(video, useCache);
-        if (audio.isPlaying){
-          if (counter > 5000) {
-            threshold = Math.floor(Math.random() * 10000);
-          }
-          counter += 1;
-        }
         for (let i = 0, length = particles.geometry.vertices.length; i < length; i++) {
             const particle = particles.geometry.vertices[i];
             if (i % density !== 0) {
