@@ -195,19 +195,19 @@ window.addEventListener('wheel', event => {
     threshold += -50.0 * scroll_speed;
 });
 
-const eventController = (time) => {
-
-    if (time > 14 && time < 20) {
-        threshold = Math.floor(Math.random() * 10000);
-    }
-    else if (time > 20 && time < 26) {
-        if (threshold > 1000) { threshold = 1000; }
-        threshold -= 4;
-    }
-};
+// const eventController = (time) => {
+//
+//     if (time > 14 && time < 20) {
+//         threshold = Math.floor(Math.random() * 10000);
+//     }
+//     else if (time > 20 && time < 26) {
+//         if (threshold > 1000) { threshold = 1000; }
+//         threshold -= 4;
+//     }
+// };
 
 const draw = (t) => {
-    eventController(masterClock + clock.getElapsedTime());
+    // eventController(masterClock + clock.getElapsedTime());
     let r, g, b;
 
     // audio
