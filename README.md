@@ -1,4 +1,4 @@
-# Tidal Hybrid Visualizer
+# Tidal Hybrid Interactive Visualizer
 
 A controllable audio visualizer with input from a webcam.
 
